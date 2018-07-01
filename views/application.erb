@@ -9,7 +9,18 @@
     <link rel="stylesheet" type="text/css" href="css/application.css">
   </head>
   <body>
-
+  <% if current_user %>
+    <a href="/logout">Log Out</a>
+  <%else%>
+    <%if @current_user == 'sign_up' %>
+      <a href="/log_in">Log In</a>
+    <%elsif @current_user == 'log_in'%>
+      <a href="/sign_up">Sign Up</a>
+    <%else%>
+      <a href="/log_in">Log In</a>
+      <a href="/sign_up">Sign Up</a>
+    <%end%>
+  <%end%>
     <%= yield %>
 
   </body>

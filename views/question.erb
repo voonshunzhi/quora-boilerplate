@@ -1,0 +1,22 @@
+<div>
+	<h3>Question :</h3>
+	<p><%=@question.question%></p>
+	<p>created_at:<%=" #{@question.created_at.to_date}  #{@question.created_at.strftime('%H : %M')}"%></p>
+</div>
+<div>
+	<h3>Answer this question:</h3>
+	<form method="post">
+		<textarea rows="5" cols="50" placeholder="Write an answer....." name="question[answer]"></textarea>
+		<button type="submit">Post Answer</button>
+	</form>
+</div> 
+<div>
+	<h3>Answer :</h3>
+		<% @answer.each do |answer|%>
+		<p><%=answer.answer%></p>
+		<p>Answered by : <%=User.find_user(answer.user_id)%></p>
+		<p><label><%=Upvote.find_number_of_votes(answer.id)%></label><button><a href=<%="/upvotes/#{@question.id}/#{answer.id}"%>>Upvote</a></button><label></label><button><a href=<%="/downvotes/#{@question.id}/#{answer.id}"%>>Downvote</a></button></p>
+		<%end%>
+</div>
+
+

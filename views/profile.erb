@@ -1,0 +1,25 @@
+
+<div class="flex-box">
+
+	<div class="flex-item">
+		<h3><%="Welcome #{session[:username]}"%></h3>
+
+		<form method="post">
+			<textarea rows="6" cols="50" name="question[content]" placeholder="Post your question here......."></textarea>
+			<button type="submit">Post</button>
+		</form>
+	</div>
+
+	<div class="flex-item">
+		<% @questions.each do |question|%>
+
+			<div>
+				<div><%=question.question%></div>
+				<div>created_at:<%=" #{question.created_at.to_date}  #{question.created_at.strftime('%H : %M')}"%></div>
+				<div><button><a href=<%="/questions/#{question.id}"%>>Read More</a></button></div>
+			</div>
+		
+		<%end%>
+	</div>
+
+</div>

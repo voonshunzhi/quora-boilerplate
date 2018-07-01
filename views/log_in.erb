@@ -1,0 +1,13 @@
+<h1>Log In Here</h1>
+<form method="post">
+	<div><label for="email">Email : </label></div>
+	<input type="email" name='login[email]' placeholder="Enter your email here" id="email" value=<% if @email.nil? == false %><%=@email%><%end%>>
+	<div><label for="password">Password : </label></div>
+	<input type="password" name='login[password]' placeholder="Enter your password here" id="password" value=<% if @password.nil? == false %><%=@password%><%end%>>
+	<% if @error.nil? == false %>
+	<%	@error.each do |error|%>
+		<h4><%=error%></h4>
+	<%end%>
+	<%end%>
+	<input type="submit" name="submit" value="LOGIN">
+</form>

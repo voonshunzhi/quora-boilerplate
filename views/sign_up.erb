@@ -1,0 +1,28 @@
+<h1>Sign Up Here</h1>
+<form method="post">
+	<%if @email.nil? && @password.nil? && @confirm_password.nil? %>
+		<div><label for='email'>Email :</label></div>
+		<input type="email" name="user[email]" placeholder="Enter your email" id='email'>
+		<div><label for='password'>Password  :</label></div>
+		<input type="password" name="user[password]" placeholder="Enter your password" id="password">
+		<div><label for='confirm-password'>Confirm Password :</label></div>
+		<input type="password" name="user[confirmPassword]" placeholder="Confirm your password" id="confirm-password" >
+	<% else %>
+		<div><label for='email'>Email :</label></div>
+		<input type="email" name="user[email]" placeholder="Enter your email" id='email' value=<%=@email%>>
+				<div><label for='password'>Password  :</label></div>
+		<input type="password" name="user[password]" placeholder="Enter your password" id="password" value=<%=@password%>>
+		<div><label for='confirm-password'>Confirm Password :</label></div>
+		<input type="password" name="user[confirmPassword]" placeholder="Confirm your password" id="confirm-password" value=<%=@confirm_password%>>
+		<% if @error.length > 0 %>
+			<h4><%=@error.first%></h4>
+		<%end%>
+		<% if @errors_array.nil? == false %>
+			<% @errors_array.each do |error,msg| %>
+			<h4><%=msg%></h4>
+			<%end%>
+		<%end%>
+	<% end %>
+	
+	<div><input type="submit" name="submit" value="SIGNUP"></div>
+</form>

@@ -1,7 +1,7 @@
 <div>
 	<h3>Question :</h3>
 	<p><%=@question.question%></p>
-	<p>created_at:<%=" #{@question.created_at.to_date}  #{@question.created_at.strftime('%H : %M')}"%></p>
+	<p>created_at:<%=" #{@question.created_at.to_date}  #{@question.created_at.strftime('%H : %M')}"%><p> View : <%=@question.view%> times</p></p>
 	<div><a href=<%="/questions/edit/#{@question.id}"%>>Edit this question</a></div>
 	<form action=<%="/questions/#{@question.id}"%> method="post">
   		<input type="hidden" name="_method" value="DELETE">
@@ -17,10 +17,14 @@
 </div> 
 <div>
 	<h3>Answer :</h3>
+		<%if @answer.count > 0%>
 		<% @answer.each do |answer|%>
 		<p><%=answer.answer%></p>
 		<p>Answered by : <%=User.find_user(answer.user_id)%></p>
 		<p><label><%=Upvote.find_number_of_votes(answer.id)%></label><a href=<%="/upvotes/#{@question.id}/#{answer.id}"%>>Upvote</a><label></label><a href=<%="/downvotes/#{@question.id}/#{answer.id}"%>>Downvote</a></p>
+		<%end%>
+		<%else%>
+			<h3>No Answer are found!</h3>
 		<%end%>
 </div>
 

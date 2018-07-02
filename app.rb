@@ -3,6 +3,7 @@ set :run, true
 enable :sessions
 
 
+#Rootpath=============================================
 get '/' do
   erb :"home"
 end
@@ -109,6 +110,7 @@ get '/questions/:question_id' do
 		if !session[:username].nil? && !session[:user_id].nil?
 			question_id = params[:question_id]
 			@question = Question.find(question_id)
+			@question.update(view:@question.view + 1)
 			@answer = Answer.where(question_id:question_id).order(vote: :desc)
 			erb :'question'
 		else
@@ -168,6 +170,8 @@ get '/upvotes/:question_id/:ans_id' do
 			question_id = params[:question_id]
 			ans_id = params[:ans_id]
 			user_id = session[:user_id]
+			who = Answer.find(ans_id)
+		if who.user_id != session[:user_id]
 			found = Upvote.where(user_id:user_id,answer_id:ans_id).count
 
 			if found == 0
@@ -179,6 +183,10 @@ get '/upvotes/:question_id/:ans_id' do
 			else
 				redirect "/questions/#{question_id}"
 			end
+		else
+			flash[:msg] = "Don't try to upvote your own answer!"
+			redirect "/questions/#{question_id}"
+		end
 	else
 		redirect "/log_in"
 	end
@@ -190,17 +198,24 @@ get '/downvotes/:question_id/:ans_id' do
 		question_id = params[:question_id]
 		ans_id = params[:ans_id]
 		user_id = session[:user_id]
-		found = Downvote.where(user_id:user_id,answer_id:ans_id).count
+		answer_votes = Answer.find(ans_id).vote
 
-		if found == 0
-			uv = Downvote.new(user_id:user_id,answer_id:ans_id)
-			uv.save
-			uv = Upvote.find_by(user_id:user_id,answer_id:ans_id)
-			uv.delete
-			answer_votes = Answer.find(ans_id.to_i)
-			answer_votes.update(vote:answer_votes.vote - 1)
-			redirect "/questions/#{question_id}"
+		if answer_votes > 0
+			found = Downvote.where(user_id:user_id,answer_id:ans_id).count
+
+			if found == 0
+				uv = Downvote.new(user_id:user_id,answer_id:ans_id)
+				uv.save
+				uv = Upvote.find_by(user_id:user_id,answer_id:ans_id)
+				uv.delete
+				answer_votes = Answer.find(ans_id.to_i)
+				answer_votes.update(vote:answer_votes.vote - 1)
+				redirect "/questions/#{question_id}"
+			else
+				redirect "/questions/#{question_id}"
+			end
 		else
+			flash[:downvote] = "Minimum downvotes is 0"
 			redirect "/questions/#{question_id}"
 		end
 	else

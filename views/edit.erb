@@ -1,0 +1,8 @@
+<h1>Edit this question</h1>
+<form method="post">
+	<input type="hidden" name="_method" value="PUT">
+	<div><label for="question">Question : </label></div>
+	<div><textarea rows="6" cols="50" id="question" name="edit[question]"><%=@edit_question.question%></textarea></div>
+	<button type="submit">Edit question</button>
+</form>
+<a href=<%="/questions/#{@edit_question.id}"%>>Back to question</a>

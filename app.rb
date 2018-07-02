@@ -49,7 +49,7 @@ get '/log_in' do
 	if session[:username].nil? && session[:user_id].nil?
 		erb :'log_in'
 	else
-		redirect '/profile/#{session[:username]}'
+		redirect "/profile/#{session[:username]}"
 	end
 end
 
@@ -125,7 +125,43 @@ post '/questions/:question_id' do
 	redirect "/questions/#{question_id}" 
 end
 
+#Edit Question================================================
+get '/questions/edit/:question_id' do
+	@edit_question = Question.find(params[:question_id])
+	if @edit_question.user_id == session[:user_id]
+		erb :'edit'
+	else
+		flash[:warning] = "You couldn't edit this question"
+		redirect "/questions/#{params[:question_id]}"
+	end
+end
 
+put '/questions/edit/:question_id' do
+	question = Question.find(params[:question_id])
+	if question.update_attributes(params[:edit])
+		flash[:notice] = "Question successfully updated!"
+	else
+		flash[:warning] = "Question update unsuccessful!"
+	end
+	redirect "/questions/#{params[:question_id]}"
+end
+
+#DeleteQuestion================================================
+delete '/questions/:id' do
+	question = Question.find(params[:id].to_i)
+	if question.user_id == session[:user_id]
+		if question.delete
+			flash[:notice] = "Question #{question.question[0..10]}................ is deleted!"
+			redirect "/profile/#{session[:username]}"
+		else
+			flash[:notice] = "Question #{question.question[0..10]}................ is not yet deleted!"
+			redirect "/questions/#{params[:question_id]}"
+		end
+	else
+		flash[:warning] = "You couldn't delete this question!"
+		redirect "/questions/#{params[:question_id]}"
+	end
+end
 #Upvotes======================================================
 get '/upvotes/:question_id/:ans_id' do
 	if !session[:username].nil? && !session[:user_id].nil?

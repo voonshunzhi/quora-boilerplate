@@ -10,7 +10,10 @@
   </head>
   <body>
   <% if current_user %>
-    <a href="/logout">Log Out</a>
+    <div><a href="/logout">Log Out</a><a href=<%="/profile/#{@current_user}"%>>Back to Profile</a></div>
+    <%flash.each do |attr,msg| %>
+      <div><%=msg%></div>
+    <%end%>
   <%else%>
     <%if @current_user == 'sign_up' %>
       <a href="/log_in">Log In</a>
@@ -21,6 +24,7 @@
       <a href="/sign_up">Sign Up</a>
     <%end%>
   <%end%>
+
     <%= yield %>
 
   </body>

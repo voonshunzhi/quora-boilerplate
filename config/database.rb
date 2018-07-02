@@ -58,13 +58,21 @@ if Sinatra::Application.development?
 
  ActiveRecord::Base.establish_connection(
 
-   adapter:  db.scheme == 'postgres' ? 'postgresql' : db.scheme,
+   #adapter:  db.scheme == 'postgres' ? 'postgresql' : db.scheme,
 
-   database: DB_NAME,
+   adapter: 'postgresql',
+
+   database: 'quora_clone_development',
 
    encoding: 'utf8',
 
-   pool: 30
+   pool: 30,
+
+   #username: db.user,
+   username: 'sjvoon97',
+
+   #password: db.password,
+
 
  )
 
@@ -78,9 +86,11 @@ else
 
    port:     db.port,
 
-   username: db.user,
+   # #username: db.user,
+   # username: 'postgres',
 
-   password: db.password,
+   # #password: db.password,
+   # password: '93332030',
 
    database: DB_NAME,
 

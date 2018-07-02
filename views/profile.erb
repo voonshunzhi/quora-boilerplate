@@ -14,9 +14,9 @@
 		<% @questions.each do |question|%>
 
 			<div>
-				<div><%=question.question%></div>
+				<div><%=question.question[0..20] + "....."%></div>
 				<div>created_at:<%=" #{question.created_at.to_date}  #{question.created_at.strftime('%H : %M')}"%></div>
-				<div><button><a href=<%="/questions/#{question.id}"%>>Read More</a></button></div>
+				<div><a href=<%="/questions/#{question.id}"%>>Read More</a></div>
 			</div>
 		
 		<%end%>

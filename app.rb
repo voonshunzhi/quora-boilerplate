@@ -157,72 +157,69 @@ delete '/questions/:id' do
 			redirect "/profile/#{session[:username]}"
 		else
 			flash[:notice] = "Question #{question.question[0..10]}................ is not yet deleted!"
-			redirect "/questions/#{params[:question_id]}"
+			redirect "/questions/#{params[:id]}"
 		end
 	else
 		flash[:warning] = "You couldn't delete this question!"
-		redirect "/questions/#{params[:question_id]}"
+		redirect "/questions/#{params[:id]}"
 	end
 end
 #Upvotes======================================================
-get '/upvotes/:question_id/:ans_id' do
+get '/:votes/:question_id/:ans_id' do
 	if !session[:username].nil? && !session[:user_id].nil?
+			action = params[:votes]
 			question_id = params[:question_id]
 			ans_id = params[:ans_id]
-			user_id = session[:user_id]
-			who = Answer.find(ans_id)
-		if who.user_id != session[:user_id]
-			found = Upvote.where(user_id:user_id,answer_id:ans_id).count
-
-			if found == 0
-				uv = Upvote.new(user_id:user_id,answer_id:ans_id)
-				uv.save
-				answer_votes = Answer.find(ans_id.to_i)
-				answer_votes.update(vote:answer_votes.vote + 1)
-				redirect "/questions/#{question_id}"
-			else
-				redirect "/questions/#{question_id}"
-			end
-		else
-			flash[:msg] = "Don't try to upvote your own answer!"
-			redirect "/questions/#{question_id}"
-		end
+				if action == "upvotes"
+					if Vote.find_by(answer_id:ans_id,user_id:session[:user_id]) != nil
+						vt = Vote.find_by(answer_id:ans_id,user_id:session[:user_id])
+						if vt.value != 'up'
+							ans = Answer.find(ans_id)
+							ans.update(vote:ans.vote + 1)
+							vt.update(value:"up")
+							flash[:notice] = "Upvoted!"
+							redirect "/questions/#{question_id}"
+						else
+							flash[:notice] = "Not Upvoted!"
+							redirect "/questions/#{question_id}"
+						end
+					else
+						vt = Vote.new(answer_id:ans_id,user_id:session[:user_id],value:"up")
+							if vt.save
+								ans.update(vote:ans.vote + 1)
+								flash[:notice] = "Upvoted!"
+								redirect "/questions/#{question_id}"
+							end
+					end
+				elsif action == "downvotes"
+					if Vote.find_by(answer_id:ans_id,user_id:session[:user_id])
+						vt = Vote.find_by(answer_id:ans_id,user_id:session[:user_id])
+						if vt.value == "0" || vt.value == 'up'
+							ans = Answer.find(ans_id)
+							ans.update(vote:ans.vote - 1)
+							vt.update(value:"down")
+							flash[:notice] = "Downvoted!"
+							redirect "/questions/#{question_id}"
+						else
+							flash[:notice] = "Not downvoted!"
+							redirect "/questions/#{question_id}"
+						end
+					else
+						vt = Vote.new(answer_id:ans_id,user_id:session[:user_id],value:"down")
+							if vt.save
+								ans.update(vote:ans.vote - 1)
+								flash[:notice] = "Downvoted!"
+								redirect "/questions/#{question_id}"
+							end
+					end
+				end
+				
 	else
 		redirect "/log_in"
 	end
 	
 end
-#Downvote=====================================================
-get '/downvotes/:question_id/:ans_id' do
-	if !session[:username].nil? && !session[:user_id].nil?
-		question_id = params[:question_id]
-		ans_id = params[:ans_id]
-		user_id = session[:user_id]
-		answer_votes = Answer.find(ans_id).vote
 
-		if answer_votes > 0
-			found = Downvote.where(user_id:user_id,answer_id:ans_id).count
-
-			if found == 0
-				uv = Downvote.new(user_id:user_id,answer_id:ans_id)
-				uv.save
-				uv = Upvote.find_by(user_id:user_id,answer_id:ans_id)
-				uv.delete
-				answer_votes = Answer.find(ans_id.to_i)
-				answer_votes.update(vote:answer_votes.vote - 1)
-				redirect "/questions/#{question_id}"
-			else
-				redirect "/questions/#{question_id}"
-			end
-		else
-			flash[:downvote] = "Minimum downvotes is 0"
-			redirect "/questions/#{question_id}"
-		end
-	else
-		redirect "/log_in"
-	end
-	
-end
 #Logout========================================================
 get '/logout' do
 	session[:username] = nil

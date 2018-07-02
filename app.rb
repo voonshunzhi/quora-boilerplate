@@ -186,6 +186,7 @@ get '/:votes/:question_id/:ans_id' do
 					else
 						vt = Vote.new(answer_id:ans_id,user_id:session[:user_id],value:"up")
 							if vt.save
+								ans = Answer.find(ans_id)
 								ans.update(vote:ans.vote + 1)
 								flash[:notice] = "Upvoted!"
 								redirect "/questions/#{question_id}"
@@ -207,6 +208,7 @@ get '/:votes/:question_id/:ans_id' do
 					else
 						vt = Vote.new(answer_id:ans_id,user_id:session[:user_id],value:"down")
 							if vt.save
+								ans = Answer.find(ans_id)
 								ans.update(vote:ans.vote - 1)
 								flash[:notice] = "Downvoted!"
 								redirect "/questions/#{question_id}"

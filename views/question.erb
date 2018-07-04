@@ -25,7 +25,7 @@
 					<% @answer.each do |answer|%>
 					<p><%=answer.answer%></p>
 					<p>Answered by : <%=User.find_user(answer.user_id)%></p>
-					<p><label><%=answer.vote%></label><a href=<%="/upvotes/#{@question.id}/#{answer.id}"%>>Upvote</a><label></label><a href=<%="/downvotes/#{@question.id}/#{answer.id}"%>>Downvote</a></p>
+					<p><label></label><button class="upvotes" value=<%="/upvotes/#{@question.id}/#{answer.id}"%>>Upvote</button><label></label><a href=<%="/downvotes/#{@question.id}/#{answer.id}"%>>Downvote</a></p>
 					<%end%>
 					<%else%>
 						<h3>No Answer are found!</h3>
@@ -33,4 +33,6 @@
 			</div>
 </div>
 
-
+<script type="text/javascript">
+	
+</script>

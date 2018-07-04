@@ -22,6 +22,9 @@ gem 'bootstrap-sass', '~> 3.3.7'
 
 gem 'sass-rails', '>= 3.2'
 
+gem 'json'
+
+gem 'shotgun'
 # group :development do
   # gem "shotgun"
 # end

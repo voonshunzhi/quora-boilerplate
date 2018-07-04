@@ -24,6 +24,8 @@ require 'sinatra/cookies'
 
 require 'sinatra/flash'
 
+require 'json'
+
 APP_ROOT = Pathname.new(File.expand_path('../../', __FILE__))
 
 set :public_folder, File.join(APP_ROOT, "public")
@@ -36,3 +38,5 @@ require APP_ROOT.join('config', 'database')
 # Dir[APP_ROOT.join('controllers', '*.rb')].each { |file| require file }
 # Setup helper
 Dir[APP_ROOT.join('helpers', '*.rb')].each { |file| require file }
+
+set :session_secret, "123456"
